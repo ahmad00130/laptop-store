@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Laptop Store</title>
+  <link rel="stylesheet" href="admin.css">
+  <style>
+    .photo-field {
+      margin-bottom: 16px;
+    }
+    .photo-label {
+      display: block;
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+    .photo-row {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+    .photo-preview {
+      width: 160px;
+      height: 110px;
+      border: 2px dashed #cbd5e1;
+      border-radius: 10px;
+      background: #f8fafc;
+      color: #94a3b8;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .photo-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .photo-controls {
+      flex: 1;
+      min-width: 220px;
+    }
+    .photo-controls .btn {
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Login -->
+  <section id="login-view" class="login-box hidden">
+    <h1>Admin login</h1>
+    <form id="login-form">
+      <label>Username
+        <input type="text" name="username" autocomplete="username" required>
+      </label>
+      <label>Password
+        <input type="password" name="password" autocomplete="current-password" required>
+      </label>
+      <button type="submit" class="btn">Log in</button>
+      <p id="login-error" class="error"></p>
+    </form>
+  </section>
+
+  <!-- Dashboard -->
+  <section id="dashboard-view" class="hidden">
+    <header class="topbar">
+      <h1>Laptop Store Admin</h1>
+      <div>
+        <span id="admin-name"></span>
+        <a href="/orders.html" class="link">Orders</a>
+        <a href="/" class="link">View store</a>
+        <button id="logout-btn" class="btn small secondary">Log out</button>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <div class="panel">
+        <h2 id="form-title">Add a laptop</h2>
+        <form id="laptop-form">
+          <input type="hidden" name="laptop_id">
+          <input type="hidden" name="image">
+
+          <div class="form-grid">
+            <label>Brand
+              <input type="text" name="brand" required>
+            </label>
+            <label>Model
+              <input type="text" name="model" required>
+            </label>
+            <label>Processor
+              <input type="text" name="processor" required>
+            </label>
+            <label>RAM (GB)
+              <input type="number" name="ram_gb" min="1" required>
+            </label>
+            <label>Storage (GB)
+              <input type="number" name="storage_gb" min="1" required>
+            </label>
+            <label>Storage type
+              <select name="storage_type">
+                <option>SSD</option>
+                <option>HDD</option>
+              </select>
+            </label>
+            <label>Screen size (inches)
+              <input type="number" name="screen_size" step="0.1" min="0">
+            </label>
+            <label>Battery health
+              <input type="text" name="battery_health" placeholder="e.g. 85%">
+            </label>
+            <label>Condition
+              <select name="condition">
+                <option>Used</option>
+                <option>Refurbished</option>
+                <option>New</option>
+              </select>
+            </label>
+            <label>Price (₦)
+              <input type="number" name="price" min="1" required>
+            </label>
+            <label>Discount (%)
+              <input type="number" name="discount_percent" min="0" max="100" value="0" required>
+            </label>
+            <label>Stock
+              <input type="number" name="stock" min="0" value="1" required>
+            </label>
+          </div>
+
+          <div class="photo-field">
+            <span class="photo-label">Photo (optional)</span>
+            <div class="photo-row">
+              <div id="photo-preview" class="photo-preview">No photo</div>
+              <div class="photo-controls">
+                <input type="file" id="photo-file" accept="image/*">
+                <button type="button" id="photo-remove" class="btn small secondary hidden">Remove photo</button>
+                <p id="photo-status" class="message"></p>
+              </div>
+            </div>
+          </div>
+
+          <fieldset>
+            <legend>Best for (tick all that fit)</legend>
+            <div id="tag-boxes" class="tag-boxes"></div>
+          </fieldset>
+
+          <div class="actions">
+            <button type="submit" id="save-btn" class="btn">Save laptop</button>
+            <button type="button" id="cancel-edit" class="btn secondary hidden">Cancel edit</button>
+          </div>
+          <p id="form-message" class="message"></p>
+        </form>
+      </div>
+
+      <div class="panel">
+        <h2>Laptops in stock</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Photo</th>
+                <th>Laptop</th>
+                <th>Specs</th>
+                <th>Price</th>
+                <th>Discount</th>
+                <th>Final</th>
+                <th>Stock</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="laptop-rows"></tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </section>
+
+  <script src="admin.js"></script>
+</body>
+</html>

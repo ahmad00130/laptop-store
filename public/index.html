@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Laptop Store - Find the right laptop, pay your way</title>
+  <meta name="description" content="Quality laptops with clear prices. Pick by what you do, and pay in full or in installments.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="nav" id="top">
+    <div class="container nav-inner">
+      <a class="brand" href="#top">
+        <span class="brand-mark">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M2 20h20"/></svg>
+        </span>
+        <span data-store-name>Laptop Store</span>
+      </a>
+      <nav class="nav-links" aria-label="Main">
+        <a href="#shop">Laptops</a>
+        <a href="#how">How it works</a>
+      </nav>
+      <a class="nav-cta" id="nav-whatsapp" target="_blank" rel="noopener">Chat on WhatsApp</a>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container hero-inner">
+      <p class="eyebrow">Quality laptops &middot; Pay your way</p>
+      <h1>Find the right laptop for <span class="gradient-text">what you do.</span></h1>
+      <p class="hero-sub">Tell us what you'll use it for and we'll show laptops that can handle it, with clear prices and optional installments.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#shop">Browse laptops</a>
+        <a class="btn btn-ghost" href="#how">How it works</a>
+      </div>
+      <p class="tiles-label">What will you use it for?</p>
+      <div class="tiles" id="usecase-tiles"></div>
+    </div>
+  </section>
+
+  <section class="trust container">
+    <div class="trust-grid">
+      <div class="trust-item">
+        <span class="trust-icon">🧾</span>
+        <div><strong>Clear prices</strong><p>The discount and the final price are shown upfront.</p></div>
+      </div>
+      <div class="trust-item">
+        <span class="trust-icon">📅</span>
+        <div><strong>Installment plans</strong><p>Choose your deposit and how many months to pay.</p></div>
+      </div>
+      <div class="trust-item">
+        <span class="trust-icon">💬</span>
+        <div><strong>Talk to the seller</strong><p>Reach us on WhatsApp or by phone, any time.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <main id="shop" class="container shop">
+    <div class="shop-head">
+      <h2>Laptops in stock</h2>
+      <p id="results-info" class="results-info"></p>
+    </div>
+
+    <form id="filters" class="toolbar" autocomplete="off">
+      <div class="toolbar-row">
+        <div class="search">
+          <span aria-hidden="true">🔎</span>
+          <input type="text" id="search" placeholder="Search brand, model or processor" aria-label="Search laptops">
+        </div>
+        <select id="sort" aria-label="Sort laptops">
+          <option value="best">Best match</option>
+          <option value="price-asc">Price: low to high</option>
+          <option value="price-desc">Price: high to low</option>
+          <option value="discount">Biggest discount</option>
+        </select>
+        <button type="button" id="filter-toggle" class="btn btn-outline btn-filter" aria-expanded="false" aria-controls="filter-panel">
+          Filters <span id="filter-count" class="count hidden">0</span>
+        </button>
+      </div>
+
+      <div id="filter-panel" class="filter-panel hidden">
+        <label>Use
+          <select id="usecase"></select>
+        </label>
+        <label>Brand
+          <select id="brand"><option value="">All brands</option></select>
+        </label>
+        <label>Minimum RAM
+          <select id="ram">
+            <option value="0">Any</option>
+            <option value="8">8GB or more</option>
+            <option value="16">16GB or more</option>
+            <option value="32">32GB or more</option>
+          </select>
+        </label>
+        <label>Minimum storage
+          <select id="storage">
+            <option value="0">Any</option>
+            <option value="256">256GB or more</option>
+            <option value="512">512GB or more</option>
+            <option value="1000">1TB or more</option>
+          </select>
+        </label>
+        <label>Condition
+          <select id="condition">
+            <option value="">Any</option>
+            <option>New</option>
+            <option>Used</option>
+            <option>Refurbished</option>
+          </select>
+        </label>
+        <label>Maximum budget (₦)
+          <input type="number" id="budget" min="0" placeholder="e.g. 400000">
+        </label>
+        <label class="check">
+          <input type="checkbox" id="instock"> In stock only
+        </label>
+        <button type="button" id="reset" class="btn btn-outline btn-sm">Clear all filters</button>
+      </div>
+    </form>
+
+    <p id="status" class="status hidden"></p>
+    <div id="laptop-grid" class="grid" aria-live="polite"></div>
+  </main>
+
+  <section id="how" class="how">
+    <div class="container">
+      <h2>How it works</h2>
+      <div class="steps">
+        <div class="step">
+          <span class="step-num">1</span>
+          <h3>Pick by what you do</h3>
+          <p>Choose a use, like school, programming or gaming, and we show laptops that can handle it.</p>
+        </div>
+        <div class="step">
+          <span class="step-num">2</span>
+          <h3>Send a request</h3>
+          <p>Choose a laptop, then pay in full or set up an installment plan. Leave your name and number.</p>
+        </div>
+        <div class="step">
+          <span class="step-num">3</span>
+          <h3>We confirm with you</h3>
+          <p>The seller contacts you to confirm availability, the deposit and the terms. Nothing is paid on this website.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div>
+        <strong data-store-name>Laptop Store</strong>
+        <p>All prices are in Naira (₦).</p>
+      </div>
+      <a class="nav-cta" id="footer-whatsapp" target="_blank" rel="noopener">Chat on WhatsApp</a>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

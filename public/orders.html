@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Orders - Laptop Store Admin</title>
+  <link rel="stylesheet" href="admin.css">
+  <style>
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .stat {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      padding: 16px;
+    }
+    .stat span { display: block; font-size: 13px; color: #64748b; }
+    .stat strong { font-size: 22px; }
+    .stat.warn strong { color: #dc2626; }
+    .stat.accent strong { color: #4f46e5; }
+
+    .list-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    .list-head h2 { margin: 0; }
+    .list-head select { width: auto; margin: 0; }
+
+    .preview {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 10px;
+      padding: 12px;
+      margin: 8px 0 16px;
+      font-size: 15px;
+    }
+    .source {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      background: #eef2ff;
+      border: 1px solid #c7d2fe;
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-bottom: 14px;
+      font-size: 14px;
+    }
+
+    .req {
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 12px;
+      background: #fff;
+    }
+    .req.new { border-color: #c7d2fe; background: #f5f7ff; }
+    .req-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .req-head h3 { font-size: 16px; margin: 0 0 2px; }
+    .req-wants { font-size: 14px; margin-top: 6px; }
+    .req-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .order {
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    .order.overdue { border-color: #fca5a5; background: #fff7f7; }
+    .order-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .order-head h3 { font-size: 17px; margin: 0 0 2px; }
+    .muted { color: #64748b; font-size: 14px; }
+
+    .pill {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: bold;
+      padding: 3px 10px;
+      border-radius: 999px;
+      color: #fff;
+      margin-left: 4px;
+    }
+    .pill.active { background: #2563eb; }
+    .pill.overdue { background: #dc2626; }
+    .pill.completed { background: #059669; }
+    .pill.cancelled { background: #64748b; }
+    .pill.handed { background: #7c3aed; }
+    .pill.new { background: #4f46e5; }
+    .pill.contacted { background: #d97706; }
+    .pill.converted { background: #059669; }
+    .pill.declined { background: #64748b; }
+
+    .money {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 10px;
+      margin: 12px 0;
+    }
+    .money div {
+      background: #f1f5f9;
+      border-radius: 8px;
+      padding: 8px 10px;
+      font-size: 13px;
+      color: #475569;
+    }
+    .money strong { display: block; font-size: 16px; color: #1f2937; }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin-top: 8px;
+    }
+    .two-col h4 { font-size: 14px; margin-bottom: 4px; }
+    .mini { list-style: none; font-size: 14px; }
+    .mini li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 0;
+      border-bottom: 1px solid #f1f5f9;
+    }
+    .mini li.done { color: #059669; }
+
+    .pay-form {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 8px;
+      margin-top: 14px;
+      align-items: end;
+    }
+    .pay-form input, .pay-form select { margin: 0; }
+
+    .order-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    a.btn { display: inline-block; text-decoration: none; }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <h1>Orders &amp; Payments</h1>
+    <div>
+      <a href="/admin.html" class="link">Laptops</a>
+      <a href="/" class="link">View store</a>
+      <button id="logout-btn" class="btn small secondary">Log out</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="summary" id="summary"></div>
+    <p id="page-message" class="message"></p>
+
+    <div class="panel">
+      <div class="list-head">
+        <h2>Customer requests</h2>
+        <select id="request-filter">
+          <option value="open">Open (new + contacted)</option>
+          <option value="new">New</option>
+          <option value="contacted">Contacted</option>
+          <option value="converted">Order created</option>
+          <option value="declined">Declined</option>
+          <option value="all">All</option>
+        </select>
+      </div>
+      <div id="requests"></div>
+    </div>
+
+    <div class="panel" id="order-panel">
+      <h2>New order</h2>
+
+      <div id="order-source" class="source hidden">
+        <span id="order-source-text"></span>
+        <button type="button" id="order-source-clear" class="btn small secondary">Clear</button>
+      </div>
+
+      <form id="order-form">
+        <input type="hidden" name="request_id">
+        <div class="form-grid">
+          <label>Laptop
+            <select name="laptop_id" required></select>
+          </label>
+          <label>Customer name
+            <input type="text" name="customer_name" maxlength="100" required>
+          </label>
+          <label>Customer phone
+            <input type="text" name="customer_phone" placeholder="e.g. 08012345678" maxlength="20" required>
+          </label>
+          <label>Deposit (₦)
+            <input type="number" name="deposit_amount" min="0" required>
+          </label>
+          <label>Months to pay the balance
+            <select name="months">
+              <option>1</option><option>2</option><option selected>3</option>
+              <option>4</option><option>5</option><option>6</option>
+              <option>7</option><option>8</option><option>9</option>
+              <option>10</option><option>11</option><option>12</option>
+            </select>
+          </label>
+          <label>Extra charge on balance (%)
+            <input type="number" name="markup_percent" min="0" max="100" value="0">
+          </label>
+          <label>Start date
+            <input type="date" name="start_date" required>
+          </label>
+          <label>Notes (optional)
+            <input type="text" name="notes" maxlength="300">
+          </label>
+        </div>
+
+        <div class="preview" id="order-preview">Choose a laptop to see the plan.</div>
+
+        <button type="submit" class="btn">Create order</button>
+      </form>
+    </div>
+
+    <div class="panel">
+      <div class="list-head">
+        <h2>Orders</h2>
+        <select id="order-filter">
+          <option value="active">Active</option>
+          <option value="overdue">Overdue</option>
+          <option value="completed">Completed</option>
+          <option value="cancelled">Cancelled</option>
+          <option value="all">All</option>
+        </select>
+      </div>
+      <div id="orders"></div>
+    </div>
+  </main>
+
+  <script src="orders.js"></script>
+</body>
+</html>
