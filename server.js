@@ -106,6 +106,30 @@ function recordFailure(ip) {
 }
 
 
+// Resets or creates an admin account. Protected by a secret only set in Render's environment variables.
+app.get('/api/setup-admin', (req, res) => {
+  const SETUP_KEY = process.env.ADMIN_SETUP_KEY;
+  if (!SETUP_KEY || req.query.key !== SETUP_KEY) return res.status(404).send('Not found');
+
+  const username = String(req.query.username || '').trim();
+  const password = String(req.query.password || '');
+  if (!username || password.length < 10) {
+    return res.status(400).send('Provide ?username=...&password=... (password 10+ characters)');
+  }
+
+  const salt = crypto.randomBytes(16).toString('hex');
+  const hash = crypto.scryptSync(password, salt, 64).toString('hex');
+  const passwordHash = `${salt}:${hash}`;
+
+  const existing = db.prepare('SELECT id FROM admins WHERE username = ?').get(username);
+  if (existing) {
+    db.prepare('UPDATE admins SET password_hash = ? WHERE username = ?').run(passwordHash, username);
+    return res.send(`Password updated for "${username}".`);
+  }
+
+  db.prepare('INSERT INTO admins (username, password_hash) VALUES (?, ?)').run(username, passwordHash);
+  res.send(`Admin "${username}" created.`);
+});
 
 app.post('/api/admin/login', (req, res) => {
   const ip = req.ip;
