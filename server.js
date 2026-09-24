@@ -105,32 +105,7 @@ function recordFailure(ip) {
   }
 }
 
-/* ---------- Admin routes ---------- */
 
-// TEMPORARY: creates the first admin account. Remove this after use.
-app.get('/api/setup-admin', (req, res) => {
-  const SETUP_KEY = 'ahmad-setup-8271-temp';
-  if (req.query.key !== SETUP_KEY) return res.status(404).send('Not found');
-
-  const username = String(req.query.username || '').trim();
-  const password = String(req.query.password || '');
-  if (!username || password.length < 10) {
-    return res.status(400).send('Provide ?username=...&password=... (password 10+ characters)');
-  }
-
-  const salt = crypto.randomBytes(16).toString('hex');
-  const hash = crypto.scryptSync(password, salt, 64).toString('hex');
-  const passwordHash = `${salt}:${hash}`;
-
-  const existing = db.prepare('SELECT id FROM admins WHERE username = ?').get(username);
-  if (existing) {
-    db.prepare('UPDATE admins SET password_hash = ? WHERE username = ?').run(passwordHash, username);
-    return res.send(`Password updated for "${username}". Remove this route now.`);
-  }
-
-  db.prepare('INSERT INTO admins (username, password_hash) VALUES (?, ?)').run(username, passwordHash);
-  res.send(`Admin "${username}" created. Remove this route now.`);
-});
 
 app.post('/api/admin/login', (req, res) => {
   const ip = req.ip;
